@@ -4,13 +4,16 @@ class User < ApplicationRecord
   validates :email, presence: true, length: { maximum: 255 },
 format: { with: /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i },
 uniqueness: { case_sensitives: false }
+# 大小区別しない
   has_secure_password
   has_many :ownerships
   has_many :items, through: :ownerships
   
   has_many :wants
   has_many :want_items, through: :wants, class_name: 'Item', source: :item
-# 大小区別しない
+
+  has_many :haves
+  has_many :have_items, through: :haves, class_name: 'Item', source: :item
   
   def want(item)
     self.wants.find_or_create_by(item_id: item.id)
@@ -23,5 +26,18 @@ uniqueness: { case_sensitives: false }
   
   def want?(item)
     self.want_items.include?(item)
+  end
+  
+  def have(item)
+    self.haves.find_or_create_by(item_id: item.id)
+  end
+  
+  def unhave(item)
+    have = self.haves.find_by(item_id: item.id)
+    have.destroy if have
+  end
+  
+  def have?(item)
+    self.have_items.include?(item)
   end
 end
