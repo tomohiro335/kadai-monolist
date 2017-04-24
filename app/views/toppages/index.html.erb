@@ -4,7 +4,11 @@
     <div class="cover-inner">
       <div class="cover-contents">
         <h1>素敵なモノと出会う場所</h1>
-<%= link_to 'モノリストを始める', signup_path, class: 'btn tbn-success'
+<% unless logged_in? %> 
+        
+<%= link_to 'モノリストを始める', signup_path, class: 'btn btn-success' %>
+
+<% end %>
       </div>
     </div>
   </div>
